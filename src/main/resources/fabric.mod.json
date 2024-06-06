@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "elysium",
+  "version": "${version}",
+  "name": "Elysium",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/adam/Elysium"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/elysium/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.spaghettifying.elysium.Elysium"
+    ]
+  },
+  "mixins": [
+    "elysium.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
