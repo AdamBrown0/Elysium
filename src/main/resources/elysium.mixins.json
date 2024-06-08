@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "ClientConnectionMixin",
+    "VehicleMoveC2SPacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
