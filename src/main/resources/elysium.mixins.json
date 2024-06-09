@@ -7,7 +7,9 @@
   ],
   "client": [
     "ClientConnectionMixin",
-    "VehicleMoveC2SPacketMixin"
+    "VehicleMoveC2SPacketMixin",
+    "PlayerMoveC2SPacketFullMixin",
+    "PlayerMoveC2SPacketPositionAndOnGroundMixin"
   ],
   "injectors": {
     "defaultRequire": 1

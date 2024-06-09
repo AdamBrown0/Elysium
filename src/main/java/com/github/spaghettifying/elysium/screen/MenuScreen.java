@@ -1,10 +1,10 @@
 package com.github.spaghettifying.elysium.screen;
 
 import com.github.spaghettifying.elysium.hacks.BoatFly;
+import com.github.spaghettifying.elysium.hacks.CreativeFlight;
+import com.github.spaghettifying.elysium.hacks.Speed;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTexts;
-import dev.lambdaurora.spruceui.option.SpruceCheckboxBooleanOption;
-import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
@@ -31,17 +31,14 @@ public class MenuScreen extends SpruceScreen {
 
         tabbedWidget.addTabEntry(Text.literal("Flight"), null, (width, height) -> {
             var container = new SpruceOptionListWidget(Position.origin(), width, height);
+            BoatFly.construct(container);
+            CreativeFlight.construct(container);
+            return container;
+        });
 
-            SpruceOption checkboxOption = new SpruceCheckboxBooleanOption("elysium.option.checkbox.boat-fly",
-                    () -> BoatFly.enabled,
-                    newValue -> {
-                        BoatFly.enabled = newValue;
-                        System.out.println("BoatFly: " + BoatFly.enabled);
-                    },
-                    Text.literal("Enable/Disable BoatFly"),
-                    true);
-            container.addOptionEntry(checkboxOption, null);
-
+        tabbedWidget.addTabEntry(Text.literal("Ground"), null, (width, height) -> {
+            var container = new SpruceOptionListWidget(Position.origin(), width, height);
+            Speed.construct(container);
             return container;
         });
 

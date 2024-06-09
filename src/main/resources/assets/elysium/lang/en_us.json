@@ -1,5 +1,15 @@
 {
   "key.elysium.open-menu": "Open Menu",
   "key.elysium.boat-fly": "Toggle Boat Fly",
-  "elysium.option.checkbox.boat-fly": "Boat Fly"
+  "elysium.option.input.integer.boat-fly.speed": "Set BoatFly Max Speed",
+  "elysium.option.input.integer.boat-fly.acceleration": "Set BoatFly Acceleration",
+  "elysium.option.checkbox.boat-fly": "Boat Fly",
+  "elysium.option.checkbox.speed": "Toggle Speed",
+  "elysium.option.input.integer.speed.max-speed": "Set Speed Max Speed",
+  "elysium.option.input.integer.speed.acceleration": "Set Speed Acceleration",
+  "elysium.option.input.integer.speed.mini-jump": "Set Speed Mini Jump",
+  "elysium.option.checkbox.creative-flight": "Toggle CreativeFlight",
+  "elysium.option.input.integer.creative-flight.anti-kick-interval": "Set CreativeFlight Anti Kick Interval",
+  "elysium.option.input.integer.creative-flight.fall-speed": "Set CreativeFlight Fall Speed",
+  "elysium.option.input.integer.creative-flight.fly-speed": "Set CreativeFlight Fly Speed"
 }
