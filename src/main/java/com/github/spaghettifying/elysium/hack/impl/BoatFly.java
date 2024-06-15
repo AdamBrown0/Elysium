@@ -1,26 +1,41 @@
-package com.github.spaghettifying.elysium.hacks;
+package com.github.spaghettifying.elysium.hack.impl;
 
+import com.github.spaghettifying.elysium.annotation.Listen;
+import com.github.spaghettifying.elysium.hack.Hack;
 import com.github.spaghettifying.elysium.hud.EnabledMods;
 import dev.lambdaurora.spruceui.option.SpruceCheckboxBooleanOption;
 import dev.lambdaurora.spruceui.option.SpruceDoubleInputOption;
 import dev.lambdaurora.spruceui.option.SpruceIntegerInputOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
-public class BoatFly {
+@Getter
+@Setter
+@Listen(VehicleMoveC2SPacket.class)
+public class BoatFly extends Hack {
 
-    public static boolean enabled = false;
-    public static int maxSpeed = 3;
-    public static double acceleration = 0.1;
+    private int maxSpeed;
+    private double acceleration;
 
     private static int toggle = 0;
     private static final double FALL_SPEED = -0.04;
 
-    public static void tick(MinecraftClient client) {
+    public BoatFly() {
+        this.identifier = "BoatFly";
+        this.enabled = false;
+        this.maxSpeed = 3;
+        this.acceleration = 0.1;
+    }
+
+    @Override
+    public void tick(MinecraftClient client) {
         if (!enabled || client.player == null)
             return;
         boolean jumpPressed = client.options.jumpKey.isPressed();
@@ -70,28 +85,29 @@ public class BoatFly {
         }
     }
 
-    public static void construct(SpruceOptionListWidget container) {
+    @Override
+    public void construct(SpruceOptionListWidget container) {
         SpruceOption checkboxOption = new SpruceCheckboxBooleanOption("elysium.option.checkbox.boat-fly",
-                () -> BoatFly.enabled,
+                () -> this.enabled,
                 newValue -> {
-                    BoatFly.enabled = newValue;
-                    EnabledMods.enableMod(BoatFly.class, newValue);
-                    System.out.println("BoatFly: " + BoatFly.enabled);
+                    this.enabled = newValue;
+                    EnabledMods.enableMod(this, newValue);
+                    System.out.println("BoatFly: " + this.enabled);
                 },
                 Text.literal("Enable/Disable BoatFly"),
                 true);
         SpruceOption intOption = new SpruceIntegerInputOption("elysium.option.input.integer.boat-fly.speed",
-                () -> BoatFly.maxSpeed,
+                () -> this.maxSpeed,
                 newValue -> {
-                    BoatFly.maxSpeed = newValue;
-                    System.out.println("BoatFly Max Speed: " + BoatFly.maxSpeed);
+                    this.maxSpeed = newValue;
+                    System.out.println("BoatFly Max Speed: " + this.maxSpeed);
                 },
                 Text.literal("Set BoatFly max speed"));
         SpruceOption doubleOption = new SpruceDoubleInputOption("elysium.option.input.integer.boat-fly.acceleration",
-                () -> BoatFly.acceleration,
+                () -> this.acceleration,
                 newValue -> {
-                    BoatFly.acceleration = newValue;
-                    System.out.println("BoatFly Acceleration: " + BoatFly.acceleration);
+                    this.acceleration = newValue;
+                    System.out.println("BoatFly Acceleration: " + this.acceleration);
                 },
                 Text.literal("Set BoatFly acceleration"));
         container.addSingleOptionEntry(checkboxOption);

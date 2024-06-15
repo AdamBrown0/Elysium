@@ -1,8 +1,7 @@
 package com.github.spaghettifying.elysium.screen;
 
-import com.github.spaghettifying.elysium.hacks.BoatFly;
-import com.github.spaghettifying.elysium.hacks.CreativeFlight;
-import com.github.spaghettifying.elysium.hacks.Speed;
+import com.github.spaghettifying.elysium.Elysium;
+import com.github.spaghettifying.elysium.hack.Hack;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
@@ -12,6 +11,8 @@ import dev.lambdaurora.spruceui.widget.container.tabbed.SpruceTabbedWidget;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public class MenuScreen extends SpruceScreen {
 
@@ -29,18 +30,8 @@ public class MenuScreen extends SpruceScreen {
 
         tabbedWidget.addSeparatorEntry(Text.literal("Movement"));
 
-        tabbedWidget.addTabEntry(Text.literal("Flight"), null, (width, height) -> {
-            var container = new SpruceOptionListWidget(Position.origin(), width, height);
-            BoatFly.construct(container);
-            CreativeFlight.construct(container);
-            return container;
-        });
-
-        tabbedWidget.addTabEntry(Text.literal("Ground"), null, (width, height) -> {
-            var container = new SpruceOptionListWidget(Position.origin(), width, height);
-            Speed.construct(container);
-            return container;
-        });
+        constructTabEntry(tabbedWidget, "Flight", "They said pigs would never fly smh");
+        constructTabEntry(tabbedWidget, "Ground", "Yum :)");
 
         this.addDrawableChild(tabbedWidget);
 
@@ -51,4 +42,15 @@ public class MenuScreen extends SpruceScreen {
                     this.client.setScreen(this.parent);
                 }).asVanilla());
     }
+
+    private void constructTabEntry(SpruceTabbedWidget tabbedWidget, String category, String description) {
+        tabbedWidget.addTabEntry(Text.literal(category), Text.literal(description), (width, height) -> {
+            var container = new SpruceOptionListWidget(Position.origin(), width, height);
+            for (Map.Entry<Hack, String> hackEntry : Elysium.getHackRegistry().getHacks().entrySet())
+                if (hackEntry.getValue().equals(category))
+                    hackEntry.getKey().construct(container);
+            return container;
+        });
+    }
+
 }

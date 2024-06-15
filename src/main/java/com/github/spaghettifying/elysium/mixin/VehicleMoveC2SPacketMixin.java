@@ -1,6 +1,6 @@
 package com.github.spaghettifying.elysium.mixin;
 
-import com.github.spaghettifying.elysium.hacks.BoatFly;
+import com.github.spaghettifying.elysium.util.TickByMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class VehicleMoveC2SPacketMixin {
     @Inject(at = @At("TAIL"), method = "write")
     public void write(PacketByteBuf buf, CallbackInfo ci) {
-        BoatFly.tick(MinecraftClient.getInstance());
-//        System.out.println("AAAAAAAAAAAAAAAAAAAA");
+        TickByMixin.tick(VehicleMoveC2SPacket.class, MinecraftClient.getInstance());
     }
 }

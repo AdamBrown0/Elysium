@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
+    id 'io.freefair.lombok' version '8.6'
 }
 
 version = project.mod_version
@@ -33,6 +34,20 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     include modImplementation("dev.lambdaurora:spruceui:${project.spruceui_version}")
+
+    // Reflections
+    implementation 'org.reflections:reflections:0.10.2'
+
+//    implementation 'org.slf4j:slf4j-api:2.0.13'
+
+    implementation 'ch.qos.logback:logback-core:1.4.12'
+    implementation 'ch.qos.logback:logback-classic:1.4.12'
+}
+
+configurations {
+    configureEach {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j2-impl'
+    }
 }
 
 processResources {

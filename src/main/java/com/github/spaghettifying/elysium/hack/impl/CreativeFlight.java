@@ -1,31 +1,47 @@
-package com.github.spaghettifying.elysium.hacks;
+package com.github.spaghettifying.elysium.hack.impl;
 
+import com.github.spaghettifying.elysium.annotation.Listen;
+import com.github.spaghettifying.elysium.hack.Hack;
 import com.github.spaghettifying.elysium.hud.EnabledMods;
 import dev.lambdaurora.spruceui.option.*;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerAbilities;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
-public class CreativeFlight {
+@Getter
+@Setter
+@Listen(PlayerMoveC2SPacket.PositionAndOnGround.class)
+@Listen(PlayerMoveC2SPacket.Full.class)
+public class CreativeFlight extends Hack {
 
-    public static boolean enabled = false;
-    public static int antiKickInterval = 60;
-    public static double fallSpeed = -0.04;
-    public static float flySpeed = 0.05f;
+    private int antiKickInterval;
+    private double fallSpeed;
+    private float flySpeed;
 
     private static int tickCounter = 0;
     private static long lastTime = System.nanoTime();
 
-    public static void tick(MinecraftClient client) {
+    public CreativeFlight() {
+        this.identifier = "CreativeFlight";
+        this.enabled = false;
+        this.antiKickInterval = 60;
+        this.fallSpeed = -0.04;
+        this.flySpeed = 0.05f;
+    }
+
+    @Override
+    public void tick(MinecraftClient client) {
         assert client.player != null;
         PlayerAbilities playerAbilities = client.player.getAbilities();
         playerAbilities.allowFlying = enabled;
         playerAbilities.setFlySpeed(flySpeed);
 
         if (playerAbilities.flying) {
-            System.out.println("Tick counter: " + tickCounter);
             Vec3d currentVelocity = client.player.getVelocity();
             long now = System.nanoTime();
             if (tickCounter > antiKickInterval + 2 || (now - lastTime) / 1_000_000_000.0 >= 0.9) {
@@ -38,35 +54,36 @@ public class CreativeFlight {
         }
     }
 
-    public static void construct(SpruceOptionListWidget container) {
+    @Override
+    public void construct(SpruceOptionListWidget container) {
         SpruceOption checkboxOption = new SpruceCheckboxBooleanOption("elysium.option.checkbox.creative-flight",
-                () -> CreativeFlight.enabled,
+                () -> this.enabled,
                 newValue -> {
-                    CreativeFlight.enabled = newValue;
-                    EnabledMods.enableMod(CreativeFlight.class, newValue);
-                    System.out.println("CreativeFlight: " + CreativeFlight.enabled);
+                    this.enabled = newValue;
+                    EnabledMods.enableMod(this, newValue);
+                    System.out.println("CreativeFlight: " + this.enabled);
                 },
                 Text.literal("Enable/Disable CreativeFlight"),
                 true);
         SpruceOption intOption = new SpruceIntegerInputOption("elysium.option.input.integer.creative-flight.anti-kick-interval",
-                () -> CreativeFlight.antiKickInterval,
+                () -> this.antiKickInterval,
                 newValue -> {
-                    CreativeFlight.antiKickInterval = newValue;
-                    System.out.println("CreativeFlight Anti Kick Interval: " + CreativeFlight.antiKickInterval);
+                    this.antiKickInterval = newValue;
+                    System.out.println("CreativeFlight Anti Kick Interval: " + this.antiKickInterval);
                 },
                 Text.literal("Set CreativeFlight Anti Kick Interval"));
         SpruceOption doubleOption = new SpruceDoubleInputOption("elysium.option.input.integer.creative-flight.fall-speed",
-                () -> CreativeFlight.fallSpeed,
+                () -> this.fallSpeed,
                 newValue -> {
-                    CreativeFlight.fallSpeed = newValue;
-                    System.out.println("CreativeFlight Fall Speed: " + CreativeFlight.fallSpeed);
+                    this.fallSpeed = newValue;
+                    System.out.println("CreativeFlight Fall Speed: " + this.fallSpeed);
                 },
                 Text.literal("Set CreativeFlight Fall Speed"));
         SpruceOption floatOption = new SpruceFloatInputOption("elysium.option.input.integer.creative-flight.fly-speed",
-                () -> CreativeFlight.flySpeed,
+                () -> this.flySpeed,
                 newValue -> {
-                    CreativeFlight.flySpeed = newValue;
-                    System.out.println("CreativeFlight Fly Speed: " + CreativeFlight.flySpeed);
+                    this.flySpeed = newValue;
+                    System.out.println("CreativeFlight Fly Speed: " + this.flySpeed);
                 },
                 Text.literal("Set CreativeFlight Fly Speed"));
         container.addSingleOptionEntry(checkboxOption);

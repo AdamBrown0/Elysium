@@ -1,23 +1,41 @@
-package com.github.spaghettifying.elysium.hacks;
+package com.github.spaghettifying.elysium.hack.impl;
 
+import com.github.spaghettifying.elysium.annotation.Listen;
+import com.github.spaghettifying.elysium.hack.Hack;
 import com.github.spaghettifying.elysium.hud.EnabledMods;
 import dev.lambdaurora.spruceui.option.SpruceCheckboxBooleanOption;
 import dev.lambdaurora.spruceui.option.SpruceDoubleInputOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
-public class Speed {
+@Getter
+@Setter
+@Listen(PlayerMoveC2SPacket.PositionAndOnGround.class)
+@Listen(PlayerMoveC2SPacket.Full.class)
+public class Speed extends Hack {
 
-    public static boolean enabled = false;
-    public static double maxSpeed = 0.66F;
-    public static double acceleration = 1.8;
-    public static double miniJump = 0.1;
+    private double maxSpeed;
+    private double acceleration;
+    private double miniJump;
+
     private static double currentSpeed = 0;
 
-    public static void tick(MinecraftClient client) {
+    public Speed() {
+        this.identifier = "Speed";
+        this.enabled = false;
+        this.maxSpeed = 0.66F;
+        this.acceleration = 1.8;
+        this.miniJump = 0.1;
+    }
+
+    @Override
+    public void tick(MinecraftClient client) {
         if (!enabled)
             return;
 
@@ -41,38 +59,39 @@ public class Speed {
             client.player.setVelocity(currentVelocity.x / currentSpeed * maxSpeed, currentVelocity.y, currentVelocity.z / currentSpeed * maxSpeed);
     }
 
-    public static void construct(SpruceOptionListWidget container) {
+    @Override
+    public void construct(SpruceOptionListWidget container) {
         SpruceOption checkboxOption = new SpruceCheckboxBooleanOption("elysium.option.checkbox.speed",
-                () -> Speed.enabled,
+                () -> this.enabled,
                 newValue -> {
-                    Speed.enabled = newValue;
-                    EnabledMods.enableMod(Speed.class, newValue);
-                    System.out.println("Speed: " + Speed.enabled);
+                    this.enabled = newValue;
+                    EnabledMods.enableMod(this, newValue);
+                    System.out.println("Speed: " + this.enabled);
                 },
                 Text.literal("Enable/Disable Speed"),
                 true);
         SpruceOption doubleOption = new SpruceDoubleInputOption("elysium.option.input.integer.speed.max-speed",
-                () -> Speed.maxSpeed,
+                () -> this.maxSpeed,
                 newValue -> {
-                    Speed.maxSpeed = newValue;
-                    System.out.println("Speed Max Speed: " + Speed.maxSpeed);
+                    this.maxSpeed = newValue;
+                    System.out.println("Speed Max Speed: " + this.maxSpeed);
                 },
                 Text.literal("Set Speed Max Speed"));
         container.addSingleOptionEntry(checkboxOption);
         container.addSmallSingleOptionEntry(doubleOption);
         doubleOption = new SpruceDoubleInputOption("elysium.option.input.integer.speed.acceleration",
-                () -> Speed.acceleration,
+                () -> this.acceleration,
                 newValue -> {
-                    Speed.acceleration = newValue;
-                    System.out.println("Speed Acceleration: " + Speed.acceleration);
+                    this.acceleration = newValue;
+                    System.out.println("Speed Acceleration: " + this.acceleration);
                 },
                 Text.literal("Set Speed Acceleration"));
         container.addSmallSingleOptionEntry(doubleOption);
         doubleOption = new SpruceDoubleInputOption("elysium.option.input.integer.speed.mini-jump",
-                () -> Speed.miniJump,
+                () -> this.miniJump,
                 newValue -> {
-                    Speed.miniJump = newValue;
-                    System.out.println("Speed Mini Jump: " + Speed.miniJump);
+                    this.miniJump = newValue;
+                    System.out.println("Speed Mini Jump: " + this.miniJump);
                 },
                 Text.literal("Set Speed Mini Jump"));
         container.addSmallSingleOptionEntry(doubleOption);

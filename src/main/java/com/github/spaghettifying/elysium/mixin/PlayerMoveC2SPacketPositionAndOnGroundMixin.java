@@ -1,7 +1,6 @@
 package com.github.spaghettifying.elysium.mixin;
 
-import com.github.spaghettifying.elysium.hacks.CreativeFlight;
-import com.github.spaghettifying.elysium.hacks.Speed;
+import com.github.spaghettifying.elysium.util.TickByMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -15,8 +14,7 @@ public class PlayerMoveC2SPacketPositionAndOnGroundMixin {
 
     @Inject(at = @At("TAIL"), method = "write")
     public void write(PacketByteBuf buf, CallbackInfo ci) {
-        Speed.tick(MinecraftClient.getInstance());
-        CreativeFlight.tick(MinecraftClient.getInstance());
+        TickByMixin.tick(PlayerMoveC2SPacket.PositionAndOnGround.class, MinecraftClient.getInstance());
     }
 
 }
