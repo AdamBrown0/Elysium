@@ -8,7 +8,7 @@ $ git clone https://www.github.com/spaghettifying/elysium.git && cd elysium
 ```
 - Build using Gradle
 ```shell
-$ gradlew build
+$ ./gradlew build
 ```
 - ???
 - profit
